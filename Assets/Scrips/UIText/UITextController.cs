@@ -35,8 +35,13 @@ public class UITextController : MonoBehaviour
         _userName.text = "UserName";
     }
 
-   public void OnPointerDown()
+    public void OnPointerDown()
     {
         Debug.Log("OnPointerDown");
+    }
+
+    public void OnOptionClick()
+    {
+        Debug.Log("OnOptionClick");
     }
 }

@@ -1,7 +1,10 @@
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.VFX;
 
 enum slimeAnim
@@ -13,11 +16,13 @@ enum slimeAnim
 public class Monster : MonoBehaviour
 {
     MonsterController _MC;
+   
 
     Transform _hero;
     float _speed;
-    [SerializeField]
-    int _hp;
+    [SerializeField] int _hp;
+
+    [SerializeField] Image _slimeHpBar;
 
 
     Animator _ani;
@@ -25,6 +30,8 @@ public class Monster : MonoBehaviour
     bool isHitted = false;
     bool isRun = false;
     bool isDie = false;
+
+    int MAXHP;
     
 
     float _runTimer = 0f; 
@@ -54,10 +61,15 @@ public class Monster : MonoBehaviour
         _hero= hero;
         _MC = MC;
         _speed = 1;
-        _hp = 20;
+        MAXHP = 20;
+        _hp = MAXHP;
+        _slimeHpBar.transform.localScale = new Vector3(1, 1, 1);
+
         if (_MC.monsterCount > 3)
         {
-            _hp += 20;
+            MAXHP += 20;
+            _hp = MAXHP;
+
             Debug.Log("몬스터의 체력이 증가하였습니다.");
         }
         gameObject.SetActive(true);
@@ -116,7 +128,7 @@ public class Monster : MonoBehaviour
     {
         gameObject.SetActive(false);
         _MC.newMakeMonster();
-        Debug.Log("dieEnd");
+        
 
     }
 
@@ -131,10 +143,24 @@ public class Monster : MonoBehaviour
         if(collision.gameObject.name == "Bullet")
         {
             int BD = collision.gameObject.GetComponent<BulletDamage>().getDamage();
-            onHitted(BD);
+            if(_hp>0)
+            {
+                onHitted(BD);
+            }
+            SlimeHpDown();
             collision.gameObject.GetComponent<BulletRemove>().remove();
 
         }
+    }
+    public void SlimeHpDown()
+    {
+        SlimeHpChange((float)(_hp) / MAXHP);
+    }
+
+    public void SlimeHpChange(float value)
+    {
+        if (value < 0) value = 0;
+        _slimeHpBar.transform.localScale = new Vector3(value, 1, 1);
     }
 
     void onHitted(int hitPower)
@@ -144,9 +170,11 @@ public class Monster : MonoBehaviour
         isRun = true;
         if (_hp <= 0)
         {
+            _MC.HeroExpUp();
             isDie = true;
             if(isDie)
             {
+
                 _ani.Play(slimeAnim.slime_Die.ToString());
                 
             }
@@ -154,6 +182,8 @@ public class Monster : MonoBehaviour
             
         }
     }
+
+  
    
 }
 

@@ -12,23 +12,14 @@ enum Anim
 }
 public class CharacterController : MonoBehaviour
 {
-    [SerializeField]
-    float speed;
-
-    [SerializeField]
-    float jumpPower;
-
-    [SerializeField]
-    int hp;
-
-    [SerializeField]
-    int _attack;
-
-    [SerializeField]
-    GameObject _uiPanel;
-
-    [SerializeField]
-    MonsterController monCon;
+    [SerializeField] float speed;
+    [SerializeField] float jumpPower;
+    [SerializeField] int hp;
+    [SerializeField] int _attack;
+    [SerializeField] GameObject _uiPanel;
+    [SerializeField] MonsterController monCon;
+    [SerializeField] GameUI _GameUI;
+    [SerializeField] SetSkillItems _setSkillItems;
 
 
     Animator _ani;
@@ -48,6 +39,9 @@ public class CharacterController : MonoBehaviour
     int moveDirection; //1 : right 2: left 3: up
 
     int _circleBulletCount = 0;
+
+    int _heroExp;
+    int _needExp = 100;
 
     private void Start()
     {
@@ -218,6 +212,13 @@ public class CharacterController : MonoBehaviour
             _uiPanel.SetActive(true);
         }
     }
+
+    public void HeroExpUP()
+    {
+        _heroExp += 20;
+        _GameUI.ExpChange((float)_heroExp / _needExp);
+    }
+
 
 
 }

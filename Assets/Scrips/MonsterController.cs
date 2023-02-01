@@ -13,6 +13,8 @@ public class MonsterController : MonoBehaviour
     public int monsterCount = 0;
     List<Monster> mons = new List<Monster>();
 
+    [SerializeField] GameUI _GameUI;
+
     void Start()
     {
         _player = GameObject.FindWithTag("Character");
@@ -24,7 +26,7 @@ public class MonsterController : MonoBehaviour
     public void makeMonsters()
     {
        
-        for (int i = 0; i < 3; i++) 
+        for (int i = 0; i < 1; i++) 
         {
             GameObject mon = Instantiate(_monster, transform);
             mons.Add(mon.GetComponent<Monster>());
@@ -78,6 +80,11 @@ public class MonsterController : MonoBehaviour
         }
     }
 
+    public void HeroExpUp()
+    {
+        _hero.gameObject.GetComponent<CharacterController>().HeroExpUP();
+    }
+
     public Transform selectMonster()
     {
         float distance = 0f;
@@ -93,6 +100,8 @@ public class MonsterController : MonoBehaviour
         return target;
     }
 
+
+   
 
 
 

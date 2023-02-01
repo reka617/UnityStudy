@@ -10,11 +10,44 @@ public class CsvController : MonoBehaviour
 {
 
     public List<stHeroData> lstHero = new List<stHeroData>();
+    public List<stSkillData> lstSKillData = new List<stSkillData>();
+
+    void ReadSkillData()
+    {
+        string path = Application.dataPath + "/Resources/Datas/SkillData.csv";
+        if (File.Exists(path))
+        {
+            string source;
+            using (StreamReader sr = new StreamReader(path))
+            {
+                string[] lines;
+                source = sr.ReadToEnd();
+                lines = Regex.Split(source, @"\r\n|\n\r|\n|\r");
+                string[] header = Regex.Split(lines[0], ",");
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    string[] values = Regex.Split(lines[i], ",");
+                    if (values.Length == 0 || string.IsNullOrEmpty(values[0])) continue;
+
+                    stSkillData tempData = new stSkillData();
+                    tempData.INDEX = int.Parse(values[0]);
+                    tempData.LV = int.Parse(values[1]);
+                    tempData.NAME = values[2];
+                    tempData.DMG = int.Parse(values[3]);
+                    tempData.BULLET = int.Parse(values[4]);
+                    tempData.RANGE = float.Parse(values[5]);
+
+                    lstSKillData.Add(tempData);
+                }
+            }
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        ReadFile();
+        //ReadFile();
+        ReadSkillData();
         //WriteFile(); 
     }
 
@@ -94,6 +127,17 @@ public class CsvController : MonoBehaviour
             sw.Write(sb);
         }
     }
+
+    public struct stSkillData
+    {
+        public int INDEX;
+        public string NAME;
+        public int LV;
+        public int DMG;
+        public int BULLET;
+        public float RANGE;
+    }
+
 
     public struct stHeroData
     {
