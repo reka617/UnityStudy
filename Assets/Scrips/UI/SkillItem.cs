@@ -10,9 +10,19 @@ public class SkillItem : MonoBehaviour
     [SerializeField] Text _name;
     [SerializeField] Text _description;
 
-    public void init(stSkillData data)
+    SetSkillItems _parent;
+    stSkillData _data;
+
+    public void init(stSkillData data, SetSkillItems parent)
     {
-        _name.text = data.NAME + ", LV." + data.LV;
+        _data = data;
+        _parent = parent;
+        _name.text = data.ETYPE + ", LV." + data.LV;
         _description.text = "DMG : " + data.DMG + ", RANGE : " + data.RANGE + ", BULLET : " + data.BULLET;
+    }
+
+    public void Onselected()
+    {
+        _parent.characterLvup(_data);
     }
 }

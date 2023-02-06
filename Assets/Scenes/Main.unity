@@ -1003,7 +1003,7 @@ Tilemap:
       - {fileID: -8050565165637369036, guid: 157cbc340d2b7e64ab85168e80e95550, type: 3}
       - {fileID: -8396435236039822241, guid: 157cbc340d2b7e64ab85168e80e95550, type: 3}
       - {fileID: -9153956920074294983, guid: 157cbc340d2b7e64ab85168e80e95550, type: 3}
-      m_AnimationSpeed: 2.8278563
+      m_AnimationSpeed: 1.0572249
       m_AnimationTimeOffset: 0
       m_IsLooping: 1
   - first: {x: -9, y: -1, z: 0}
@@ -1013,7 +1013,7 @@ Tilemap:
       - {fileID: -8050565165637369036, guid: 157cbc340d2b7e64ab85168e80e95550, type: 3}
       - {fileID: -8396435236039822241, guid: 157cbc340d2b7e64ab85168e80e95550, type: 3}
       - {fileID: -9153956920074294983, guid: 157cbc340d2b7e64ab85168e80e95550, type: 3}
-      m_AnimationSpeed: 1.9408659
+      m_AnimationSpeed: 4.575573
       m_AnimationTimeOffset: 0
       m_IsLooping: 1
   m_TileAssetArray:
@@ -1610,7 +1610,7 @@ MonoBehaviour:
   _uiPanel: {fileID: 977227171}
   monCon: {fileID: 1396761241}
   _GameUI: {fileID: 1381162836}
-  _setSkillItems: {fileID: 0}
+  _setSkillItems: {fileID: 1007740053}
   isJump: 0
   isAttack: 0
   isIdle: 1

@@ -5,7 +5,14 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
-
+public enum EskillType
+{
+    none,
+    bibleShot,
+    homingShot,
+    dagger,
+    MAX
+}
 public class CsvController : MonoBehaviour
 {
 
@@ -32,7 +39,7 @@ public class CsvController : MonoBehaviour
                     stSkillData tempData = new stSkillData();
                     tempData.INDEX = int.Parse(values[0]);
                     tempData.LV = int.Parse(values[1]);
-                    tempData.NAME = values[2];
+                    tempData.ETYPE = (EskillType)Enum.Parse(typeof(EskillType), values[2]);
                     tempData.DMG = int.Parse(values[3]);
                     tempData.BULLET = int.Parse(values[4]);
                     tempData.RANGE = float.Parse(values[5]);
@@ -131,7 +138,7 @@ public class CsvController : MonoBehaviour
     public struct stSkillData
     {
         public int INDEX;
-        public string NAME;
+        public EskillType ETYPE;
         public int LV;
         public int DMG;
         public int BULLET;
@@ -148,4 +155,6 @@ public class CsvController : MonoBehaviour
         public float MOVESPEED;
         public int ATTACKPOWER;
     }
+
+
 }

@@ -1,8 +1,8 @@
 index,skillLv,skillName,Dmg,Bullet,Range
-1,1,multiShot,5,2,2.5
-2,2,multiShot,10,2,2.5
-3,3,multiShot,10,3,2.5
-4,4,multiShot,15,3,2.5
+1,1,bibleShot,5,2,2.5
+2,2,bibleShot,10,2,2.5
+3,3,bibleShot,10,3,2.5
+4,4,bibleShot,15,3,2.5
 5,1,homingShot,5,1,4
 6,2,homingShot,10,1,4
 7,3,homingShot,15,1,5

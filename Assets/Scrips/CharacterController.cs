@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static CsvController;
 
 enum Anim
 {
@@ -19,7 +20,9 @@ public class CharacterController : MonoBehaviour
     [SerializeField] GameObject _uiPanel;
     [SerializeField] MonsterController monCon;
     [SerializeField] GameUI _GameUI;
-    [SerializeField] SetSkillItems _setSkillItems;
+    [SerializeField] SetSkillItems _skillPanel;
+
+    public Dictionary<EskillType, int> dicSkills = new Dictionary<EskillType, int>();
 
 
     Animator _ani;
@@ -41,7 +44,7 @@ public class CharacterController : MonoBehaviour
     int _circleBulletCount = 0;
 
     int _heroExp;
-    int _needExp = 100;
+    int _needExp = 60;
 
     private void Start()
     {
@@ -53,6 +56,8 @@ public class CharacterController : MonoBehaviour
         _bible = Resources.Load("Prefabs/Bible") as GameObject;
         _circleBullet = Resources.Load("Prefabs/CircleBullet") as GameObject;
         _rotateBullet = Resources.Load("Prefabs/RotateBullet") as GameObject;
+
+        
         /* float sign = Mathf.Sin(30);
          float radSign = 30 * Mathf.Deg2Rad;
          float resultSign = Mathf.Sin(radSign);
@@ -72,7 +77,13 @@ public class CharacterController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
-            Instantiate(_bible,transform);
+            if (gameObject.GetComponent<BibleFire>() == null)
+            {
+                BibleFire bf = gameObject.AddComponent<BibleFire>();
+                bf.Init(1);
+                
+            }
+            
         }
 
         if(Input.GetKeyDown(KeyCode.F))
@@ -197,6 +208,23 @@ public class CharacterController : MonoBehaviour
         Debug.Log("HP È¸º¹");
     }
 
+    public void getSkill(stSkillData data)
+    {   
+
+        if(dicSkills.ContainsKey(data.ETYPE) == false)
+        {
+            dicSkills.Add(data.ETYPE, data.LV);
+        }
+        else
+        {
+            dicSkills[data.ETYPE] = data.LV;
+        }
+        foreach(EskillType Type in dicSkills.Keys) 
+        {
+            Debug.Log("key : " + Type + "value : " + dicSkills[Type]);
+        }
+    }
+
     public int getAttack()
     {
         return _attack;
@@ -219,6 +247,6 @@ public class CharacterController : MonoBehaviour
         _GameUI.ExpChange((float)_heroExp / _needExp);
     }
 
-
+    
 
 }
