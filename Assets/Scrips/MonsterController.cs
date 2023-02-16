@@ -26,7 +26,7 @@ public class MonsterController : MonoBehaviour
     public void makeMonsters()
     {
        
-        for (int i = 0; i < 1; i++) 
+        for (int i = 0; i < 5; i++) 
         {
             GameObject mon = Instantiate(_monster, transform);
             mons.Add(mon.GetComponent<Monster>());
@@ -78,11 +78,6 @@ public class MonsterController : MonoBehaviour
             mon.GetComponent<Monster>().init(this, _hero);
             mons.Add(mon.GetComponent<Monster>());
         }
-    }
-
-    public void HeroExpUp()
-    {
-        _hero.gameObject.GetComponent<CharacterController>().HeroExpUP();
     }
 
     public Transform selectMonster()

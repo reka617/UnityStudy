@@ -24,5 +24,6 @@ public class SkillItem : MonoBehaviour
     public void Onselected()
     {
         _parent.characterLvup(_data);
+        _parent.gameObject.SetActive(false);
     }
 }

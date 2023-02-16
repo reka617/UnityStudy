@@ -10,8 +10,12 @@ public class SetSkillItems : MonoBehaviour
     [SerializeField] GameObject _item;
     [SerializeField] Transform _content;
     [SerializeField] CharacterController _hero;
+
+    List<GameObject> lstItems= new List<GameObject>();
+    
     public void ShowSkillPanel()
     {
+        Time.timeScale = 0;
         gameObject.SetActive(true);
         for (int i = 1; i < (int)EskillType.MAX; i++)
         {
@@ -24,6 +28,7 @@ public class SetSkillItems : MonoBehaviour
                     {
                         GameObject tmp = Instantiate(_item, _content);
                         tmp.GetComponent<SkillItem>().init(data, this);
+                        lstItems.Add(tmp);
                     }
                 }
                 else
@@ -32,6 +37,7 @@ public class SetSkillItems : MonoBehaviour
                     {
                         GameObject tmp = Instantiate(_item, _content);
                         tmp.GetComponent<SkillItem>().init(data, this);
+                        lstItems.Add(tmp);
                     }
                 }
                 
@@ -42,6 +48,13 @@ public class SetSkillItems : MonoBehaviour
     public void characterLvup(stSkillData data)
     {
         _hero.getSkill(data);
+        gameObject.SetActive(false);
+        foreach (GameObject tmp in lstItems)
+        {
+            Destroy(tmp);
+        }
+        lstItems.Clear();
+        Time.timeScale= 1;
     }
 
 

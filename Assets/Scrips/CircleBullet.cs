@@ -33,12 +33,6 @@ public class CircleBullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        lifeTimer += Time.deltaTime;
-        if (lifeTimer > 5)
-        {
-            remove();
-        }
         circlebulletMove(_target);
     }
 }

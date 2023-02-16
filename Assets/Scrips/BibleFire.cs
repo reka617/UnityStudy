@@ -26,7 +26,7 @@ public class BibleFire : MonoBehaviour
         while(count < _level)
         {
             Instantiate(_bible, transform);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(5f);
             count++;
         }
     }

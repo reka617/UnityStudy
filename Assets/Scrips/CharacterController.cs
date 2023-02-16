@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -17,10 +18,14 @@ public class CharacterController : MonoBehaviour
     [SerializeField] float jumpPower;
     [SerializeField] int hp;
     [SerializeField] int _attack;
+    [SerializeField] int _heroExp;
     [SerializeField] GameObject _uiPanel;
     [SerializeField] MonsterController monCon;
     [SerializeField] GameUI _GameUI;
     [SerializeField] SetSkillItems _skillPanel;
+    
+
+    [SerializeField] CsvController _leveldata;
 
     public Dictionary<EskillType, int> dicSkills = new Dictionary<EskillType, int>();
 
@@ -33,6 +38,10 @@ public class CharacterController : MonoBehaviour
     GameObject _circleBullet;
     GameObject _rotateBullet;
 
+    DagerFire df;
+    BibleFire biblef;
+    BaseFire basef;
+
     public bool isJump;
     public bool isAttack;
     public bool isIdle;
@@ -41,10 +50,13 @@ public class CharacterController : MonoBehaviour
 
     int moveDirection; //1 : right 2: left 3: up
 
-    int _circleBulletCount = 0;
+    
 
-    int _heroExp;
-    int _needExp = 60;
+    int _heroSumExp = 0;
+    int _needExp = 100;
+    public int _heroLv = 1;
+
+    string _heroName;
 
     private void Start()
     {
@@ -69,32 +81,39 @@ public class CharacterController : MonoBehaviour
         Move();
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Transform target = monCon.selectMonster();
-            GameObject tmp = Instantiate(_bullet);
-            tmp.transform.position = transform.position;
-            tmp.name = "Bullet";
-            tmp.GetComponent<Bullet>().init(target);
+            if (gameObject.GetComponent<BaseFire>() == null)
+            {
+                basef = gameObject.AddComponent<BaseFire>();
+                basef.Init(monCon);
+            }
+            else
+            {
+                basef = gameObject.GetComponent<BaseFire>();
+                basef.Init(monCon);
+            }
         }
         if (Input.GetKeyDown(KeyCode.T))
+        {
+            
+            
+        }
+        if (Input.GetKeyDown(KeyCode.U))
         {
             if (gameObject.GetComponent<BibleFire>() == null)
             {
                 BibleFire bf = gameObject.AddComponent<BibleFire>();
                 bf.Init(1);
-                
+
             }
-            
+
         }
 
-        if(Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F))//단검
         {
-            float deg = 30f * _circleBulletCount;
-            float y = Mathf.Sin(deg * Mathf.Deg2Rad);
-            float x = Mathf.Cos(deg * Mathf.Deg2Rad);
-            GameObject bullet = Instantiate(_circleBullet);
-            bullet.transform.position = transform.position + new Vector3(x, y, 0) * 2;
-            bullet.GetComponent<CircleBullet>().init(new Vector3(x, y, 0));
-            _circleBulletCount++;
+        
+           
+            
+
         }
         if(Input.GetKeyDown(KeyCode.G)) 
         {
@@ -171,6 +190,8 @@ public class CharacterController : MonoBehaviour
             isIdle = true;
             isMove = true;
         }
+
+        setHeroName();
     }
 
 
@@ -209,20 +230,113 @@ public class CharacterController : MonoBehaviour
     }
 
     public void getSkill(stSkillData data)
-    {   
+    {
 
-        if(dicSkills.ContainsKey(data.ETYPE) == false)
+        if (dicSkills.ContainsKey(data.ETYPE) == false) // 스킬 안배움
         {
             dicSkills.Add(data.ETYPE, data.LV);
+            switch (data.ETYPE)
+            {
+                case EskillType.dagger:
+                    {
+                        if (gameObject.GetComponent<DagerFire>() == null)
+                        {
+                            df = gameObject.AddComponent<DagerFire>();
+                            df.Init(1);
+                        }
+                    }
+                    break;
+                case EskillType.homingShot:
+                    {
+
+                    }
+                    break;
+                case EskillType.bibleShot:
+                    {
+                        if (gameObject.GetComponent<BibleFire>() == null)
+                        {
+                            BibleFire bf = gameObject.AddComponent<BibleFire>();
+                            bf.Init(1);
+                        }
+                    }
+                    break;
+
+
+            }
         }
-        else
+        else // 스킬배움
         {
             dicSkills[data.ETYPE] = data.LV;
+            switch (data.ETYPE)
+            {
+                case EskillType.dagger:
+                    {
+                        if (gameObject.GetComponent<DagerFire>() != null)
+                        {
+                            df = gameObject.GetComponent<DagerFire>();
+                            if (!df.isCoroutineing)
+                            {
+                                df.Init(1);
+                            }
+                        }
+
+                    }
+                    break;
+                case EskillType.homingShot:
+                    {
+
+                    }
+                    break;
+                case EskillType.bibleShot:
+                    {
+                        if (gameObject.GetComponent<BibleFire>() != null)
+                        {
+                            biblef = gameObject.GetComponent<BibleFire>();
+                            biblef.Init(1);
+                        }
+                    }
+                    break;
+
+
+
+            }
+
         }
-        foreach(EskillType Type in dicSkills.Keys) 
+        
+    }
+
+    void setLevelUpExp()
+    {
+        int nowNeedExp = 0;
+        int nextNeedExp = 0;
+
+        _heroLv++;
+        foreach (stLevelData data in _leveldata.lstLevelData)
         {
-            Debug.Log("key : " + Type + "value : " + dicSkills[Type]);
+            if (data.LV == _heroLv) nowNeedExp = data.SUMEXP;
+            if (data.LV == _heroLv + 1) nextNeedExp = data.SUMEXP;
         }
+        
+        _needExp = nextNeedExp - nowNeedExp;
+        _heroExp = _heroSumExp - nowNeedExp;
+    }
+
+    public void heroExpUP()
+    {
+        _heroExp += 60;
+        _heroSumExp += 60;
+        if (_heroExp >= _needExp)
+        {
+            setLevelUpExp();
+            _skillPanel.ShowSkillPanel();
+        }
+        _GameUI.ExpChange(_heroExp, _needExp);
+    }
+
+    public void setHeroName()
+    {
+        _heroName = PlayerPrefs.GetString("Name");
+        _GameUI.setChangeName(_heroName);
     }
 
     public int getAttack()
@@ -240,13 +354,6 @@ public class CharacterController : MonoBehaviour
             _uiPanel.SetActive(true);
         }
     }
-
-    public void HeroExpUP()
-    {
-        _heroExp += 20;
-        _GameUI.ExpChange((float)_heroExp / _needExp);
-    }
-
     
 
 }

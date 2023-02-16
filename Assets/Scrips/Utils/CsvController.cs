@@ -5,6 +5,8 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using static CsvController;
+
 public enum EskillType
 {
     none,
@@ -18,6 +20,7 @@ public class CsvController : MonoBehaviour
 
     public List<stHeroData> lstHero = new List<stHeroData>();
     public List<stSkillData> lstSKillData = new List<stSkillData>();
+    public List<stLevelData> lstLevelData = new List<stLevelData>();
 
     void ReadSkillData()
     {
@@ -56,6 +59,7 @@ public class CsvController : MonoBehaviour
         //ReadFile();
         ReadSkillData();
         //WriteFile(); 
+        ReadLevelData();
     }
 
     void ReadFile()
@@ -99,10 +103,39 @@ public class CsvController : MonoBehaviour
                 Debug.Log(source);*/
             }
         }
+    }
 
+    void ReadLevelData()
+    {
+        string path = Application.dataPath + "/Resources/Datas/LevelData.csv";
+        if (File.Exists(path))
+        {
+            string source;
+            using (StreamReader sr = new StreamReader(path))
+            {
+                string[] lines;
+                source = sr.ReadToEnd();
+                lines = Regex.Split(source, @"\r\n|\n\r|\n|\r");
+                string[] header = Regex.Split(lines[0], ",");
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    string[] values = Regex.Split(lines[i], ",");
+                    if (values.Length == 0 || string.IsNullOrEmpty(values[0])) continue;
 
+                    stLevelData tempData = new stLevelData();
+                    tempData.INDEX = int.Parse(values[0]);
+                    tempData.LV = int.Parse(values[1]);
+                    tempData.SUMEXP = int.Parse(values[2]);
+                    tempData.EXP = int.Parse(values[3]);
 
-
+                    lstLevelData.Add(tempData);
+                }
+                //foreach (stLevelData data in lstLevelData)
+                //{
+                //    Debug.Log($"data : {data.LV}, {data.SUMEXP}, {data.EXP}");
+                //}
+            }
+        }
     }
 
     void WriteFile()
@@ -156,5 +189,12 @@ public class CsvController : MonoBehaviour
         public int ATTACKPOWER;
     }
 
+    public struct stLevelData
+    {
+        public int INDEX;
+        public int LV;
+        public int SUMEXP;
+        public int EXP;
+    }
 
 }

@@ -16,7 +16,7 @@ public class BulletRemove : MonoBehaviour
     void Update()
     {
         _timer += Time.deltaTime;
-        if (_timer > 5)
+        if (_timer > 3)
         {
             remove();
         }

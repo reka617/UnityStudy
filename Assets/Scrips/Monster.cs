@@ -16,6 +16,7 @@ enum slimeAnim
 public class Monster : MonoBehaviour
 {
     MonsterController _MC;
+    CharacterController _CC;
    
 
     Transform _hero;
@@ -151,6 +152,28 @@ public class Monster : MonoBehaviour
             collision.gameObject.GetComponent<BulletRemove>().remove();
 
         }
+        if (collision.gameObject.name == "Bible")
+        {
+            int BD = collision.gameObject.GetComponent<BulletDamage>().getDamage();
+            if (_hp > 0)
+            {
+                onHitted(BD);
+            }
+            SlimeHpDown();
+            collision.gameObject.GetComponent<BulletRemove>().remove();
+
+        }
+        if (collision.gameObject.name == "Dagger")
+        {
+            int BD = collision.gameObject.GetComponent<BulletDamage>().getDamage();
+            if (_hp > 0)
+            {
+                onHitted(BD);
+            }
+            SlimeHpDown();
+            collision.gameObject.GetComponent<BulletRemove>().remove();
+
+        }
     }
     public void SlimeHpDown()
     {
@@ -165,12 +188,13 @@ public class Monster : MonoBehaviour
 
     void onHitted(int hitPower)
     {
+        _CC = _hero.gameObject.GetComponent<CharacterController>();
         _hp -= hitPower;
         isHitted = true;
         isRun = true;
         if (_hp <= 0)
         {
-            _MC.HeroExpUp();
+            _CC.heroExpUP();
             isDie = true;
             if(isDie)
             {
